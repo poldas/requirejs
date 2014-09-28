@@ -32,12 +32,9 @@ define(function() {
 				if(indexOf !== -1) {
 					this.items.splice(indexOf, 1);
 				}
-            },
-            _createMarker: function(opts) {
-                opts.map = this.gMap;
-                return new google.maps.Marker(opts);
             }
         };
+        
         return List;
     }());
     

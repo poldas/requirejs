@@ -1,4 +1,4 @@
-define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List'], function(g, List) {
+define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List', 'lib/markerclusterer'], function(g, List, MarkerCluster) {
 	// moduł Mapster
 	var Mapster = (function() {
 		// domyślne opcje
@@ -8,6 +8,21 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List']
 			draggable: true,
 			center: new google.maps.LatLng( 37.791350, -122.435883 ),
 			zoom: 10,
+			cluster: {
+		      options: {
+		        styles: [{
+		          url: 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m2.png',
+		          height: 56,
+		          width: 55,
+		          textColor: '#F00',
+		          textSize: 18
+		        },{
+		          url: 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png',
+		          height: 56,
+		          width: 55
+		        }]
+		      }
+		    },
 			mapTypeId: google.maps.MapTypeId.HYBRID,
 			maxZoom: 15,
 			minZoom: 4
@@ -17,9 +32,19 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List']
 			opts = opts || MAP_OPTIONS;
 			this.gMap = new google.maps.Map(elem, opts);
 			this.markers = List.create();
+			if(opts.cluster) {
+				this.markerCluster = new MarkerCluster(this.gMap, [], opts.cluster.options);
+			}
 		};
 		
 		Mapster.prototype = {
+			zoom: function(level) {
+		        if (level) {
+		          this.gMap.setZoom(level);
+		        } else {
+		          return this.gMap.getZoom();
+		        }
+		      },
 			// dodaje event
 			_on: function(opts) {
 				var self = this;
@@ -37,8 +62,10 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List']
 					}
 				}
 				marker = this._createMarker(opts);
-//				this._addMarker(marker);
-				this.markers.add(marker);
+				this._addMarker(marker);
+				if (this.markerCluster) {
+					this.markerCluster.addMarker(marker);
+				}
 				if (opts.event) {
 					this._on({
 						elem: marker,
@@ -64,14 +91,19 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List']
 				return this.markers.find(callback);
 			},
 			removeBy: function(callback) {
-            	this.markers.find(callback, function(markers) {
+				var self = this;
+				self.markers.find(callback, function(markers) {
             		markers.forEach(function(marker){
-            			marker.setMap(null);
+            			if (self.markerCluster) {
+        					self.markerCluster.removeMarker(marker);
+        				} else {
+        					marker.setMap(null);
+        				}
             		});
                 });
             },
 			_addMarker: function(marker) {
-				this.markers.push(marker);
+				this.markers.add(marker);
 			},
 			_removeMarker: function(marker) {
 				var indexOf = this.markers.indexOf(marker);
