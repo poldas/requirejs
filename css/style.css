@@ -10,3 +10,6 @@ body {
 #map-canvas {
 	height: 100%;
 }
+.color {
+	color: red;
+}
