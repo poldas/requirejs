@@ -8,15 +8,15 @@ require.config({
 require(['jquery', 'modules/Mapster'], function($, mapster) {
     $('h1').text('It\'s working!');
     var mapCanvas = $("#map-canvas").get(0);
-    var mapa = mapster.create(mapCanvas);
-    mapa._on({
-		elem: mapa.gMap,
+    var map = mapster.create(mapCanvas);
+    map._on({
+		elem: map.gMap,
 		event: 'rightclick',
 		callback: function() {
 			alert('prawy klik');
 		}
 	});
-    var marker = mapa.addMarker({
+    var marker = map.addMarker({
 		lat: 37.791350,
 		lng: -122.435883,
 		draggable: true,
@@ -30,12 +30,12 @@ require(['jquery', 'modules/Mapster'], function($, mapster) {
 			}
 		}
 	});
-    var marker2 = mapa.addMarker({
+    var marker2 = map.addMarker({
 		lat: 37.771350,
 		lng: -122.565883,
 		draggable: true,
 		icon: "http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ff8a22/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/soccer.png",
-		id: 1,
+		id: 2,
 		content: "<div class='color'>Im open</div>",
 		event: {
 			name: 'click',
@@ -44,6 +44,9 @@ require(['jquery', 'modules/Mapster'], function($, mapster) {
 			}
 		}
 	});
-    mapa._removeMarker(marker2);
+    // usuniecie markera o id 1
+    map.removeBy(function(marker) {
+    	return marker.id === 1;
+    })
 });
 

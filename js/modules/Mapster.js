@@ -1,4 +1,4 @@
-define(['async!http://maps.google.com/maps/api/js?sensor=false'], function() {
+define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List'], function(g, List) {
 	// moduł Mapster
 	var Mapster = (function() {
 		// domyślne opcje
@@ -16,7 +16,7 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false'], function() {
 		function Mapster(elem, opts) {
 			opts = opts || MAP_OPTIONS;
 			this.gMap = new google.maps.Map(elem, opts);
-			this.markers = [];
+			this.markers = List.create();
 		};
 		
 		Mapster.prototype = {
@@ -37,7 +37,8 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false'], function() {
 					}
 				}
 				marker = this._createMarker(opts);
-				this._addMarker(marker);
+//				this._addMarker(marker);
+				this.markers.add(marker);
 				if (opts.event) {
 					this._on({
 						elem: marker,
@@ -59,7 +60,16 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false'], function() {
 				}
 				return marker;
 			},
-			
+			findBy: function(callback) {
+				return this.markers.find(callback);
+			},
+			removeBy: function(callback) {
+            	this.markers.find(callback, function(markers) {
+            		markers.forEach(function(marker){
+            			marker.setMap(null);
+            		});
+                });
+            },
 			_addMarker: function(marker) {
 				this.markers.push(marker);
 			},
