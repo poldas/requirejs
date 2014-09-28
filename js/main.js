@@ -5,9 +5,9 @@ require.config({
     }
 });
 
-require(['jquery', 'async!http://maps.google.com/maps/api/js?sensor=false', 'modules/googlemaps'], function($,m,mapa) {
+require(['jquery', 'modules/googlemaps'], function($, mapster) {
     $('h1').text('It\'s working!');
     var mapCanvas = $("#map-canvas").get(0);
-    mapa.addMap(mapCanvas); 
+    var mapa = mapster.create(mapCanvas);
 });
 
