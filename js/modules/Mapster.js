@@ -52,9 +52,20 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List',
 					opts.callback.call(self, e);
 				});
 			},
+			_attachEvents: function(obj, events) {
+				var self = this;
+				events.forEach(function(event) {
+					self._on({
+						elem: obj,
+						event: event.name,
+						callback: event.callback
+					});
+				});
+			},
 			// dodaje marker
 			addMarker: function(opts) {
-				var marker;
+				var marker,
+					self = this;
 				if(opts.lat && opts.lng) {
 					opts.position = {
 						lat: opts.lat,
@@ -66,12 +77,8 @@ define(['async!http://maps.google.com/maps/api/js?sensor=false', 'modules/List',
 				if (this.markerCluster) {
 					this.markerCluster.addMarker(marker);
 				}
-				if (opts.event) {
-					this._on({
-						elem: marker,
-						event: opts.event.name,
-						callback: opts.event.callback
-					});
+				if (opts.events) {
+					this._attachEvents(marker, opts.events);
 				}
 				if (opts.content) {
 					this._on({

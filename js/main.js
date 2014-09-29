@@ -23,12 +23,18 @@ require(['jquery', 'modules/Mapster'], function($, mapster) {
 		icon: "http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ff8a22/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/soccer.png",
 		id: 1,
 		content: "<div class='color'>Im open</div>",
-		event: {
+		events: [{
 			name: 'click',
 			callback: function() {
 				alert('jestem klikniety');
 			}
-		}
+		},
+		{
+			name: 'dragend',
+			callback: function() {
+				alert('jestem dragend');
+			}
+		}]
 	});
     var marker2 = map.addMarker({
 		lat: 37.771350 + Math.random(),
@@ -37,12 +43,18 @@ require(['jquery', 'modules/Mapster'], function($, mapster) {
 		icon: "http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ff8a22/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/soccer.png",
 		id: 2,
 		content: "<div class='color'>Im open</div>",
-		event: {
+		events: [{
 			name: 'click',
-			callback: function() {
+			callback: function(e) {
 				alert('jestem klikniety');
 			}
-		}
+		},
+		{
+			name: 'dragend',
+			callback: function(e) {
+				alert('jestem dragend');
+			}
+		}]
 	});
     for (i=0; i< 40; i++) {
     	map.addMarker({
@@ -52,12 +64,18 @@ require(['jquery', 'modules/Mapster'], function($, mapster) {
     		icon: "http://mapicons.nicolasmollet.com/wp-content/uploads/mapicons/shape-default/color-ff8a22/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/soccer.png",
     		id: i,
     		content: "<div class='color'>Im open</div>",
-    		event: {
+    		events: [{
     			name: 'click',
     			callback: function() {
-    				alert('jestem klikniety');
+    				alert('jestem klikniety nr: ' + i);
     			}
-    		}
+    		},
+    		{
+    			name: 'dragend',
+    			callback: function() {
+    				alert('jestem dragend');
+    			}
+    		}]
     	});
     }
     // usuwa połowę markerów
